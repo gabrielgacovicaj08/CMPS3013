@@ -18,6 +18,11 @@ class Heap{
         }
     }
 
+    void bubble_down(){
+        int i = 1;
+        
+    }
+
     void swap(int i, int j){
         int temp = heap[i];
         heap[i] = heap[j];
@@ -31,7 +36,13 @@ class Heap{
 
     }
 
-    int pop(){return 0;}
+    int pop(){
+        int temp = heap[1];
+        bum --;
+        swap(bum, 1);
+        bubble_down();
+        return 0;}
+    
     void push(int x){
         heap[bum] = x;
         bum++;
