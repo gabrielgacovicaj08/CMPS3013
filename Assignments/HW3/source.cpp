@@ -16,6 +16,14 @@ struct Node {
 class Bst {
   Node *root;
 
+  bool _search(Node *subroot, int key) {
+    if (!subroot) return false; // Base case: key not found
+    if (key == subroot->data) return true; // Key found
+    if (key < subroot->data) 
+      return _search(subroot->left, key); // Search left subtree
+    return _search(subroot->right, key); // Search right subtree
+    }
+
   void _print(Node *subroot) {
     if (!subroot) {
       return;
@@ -25,6 +33,7 @@ class Bst {
       _print(subroot->right);
     }
   }
+  
   void _insert(Node *&subroot, int x) {
     if (!subroot) { // if(root == nullptr)
       subroot = new Node(x);
@@ -37,20 +46,11 @@ class Bst {
     }
   }
 
-  bool _search(Node *subroot, int key){
-    if (!subroot) {return false;} 
-    if (key == subroot->data){return true;}
-    if (key < subroot->data){
-        return _search(subroot->left, key);
-    }
-    return _search(subroot->right, key);
-    }
-    
 
 public:
   Bst() { root = nullptr; }
   void insert(int x) { _insert(root, x); }
-  bool search(int key) { _search(root, key); }
+  bool search(int key) { return _search(root, key);}
   void print() { _print(root); }
 };
 
@@ -63,5 +63,11 @@ int main() {
   tree.insert(17);
   tree.print();
 
-  tree.search(7);
+  int key = 7;
+  if (tree.search(key))
+    cout << "Found " << key << " in BST." << endl;
+  else
+    cout << key << " not found in BST." << endl;
+
+  return 0;
 }
