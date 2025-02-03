@@ -16,6 +16,40 @@ struct Node {
 class Bst {
   Node *root;
 
+  Node* find_min(Node* subtroot, int key){
+  }
+
+  void _delete_node(Node *&subroot, int key){
+    if(!subroot){return;}
+    if(key == subroot->data){
+      if (subroot->right == nullptr && subroot->left == nullptr){
+        delete subroot;
+      }
+      if(!subroot->left){
+        Node* temp = subroot;
+        subroot = subroot->right;
+        delete temp;
+      }
+      if(!subroot->right){
+        Node* temp = subroot;
+        subroot = subroot->left;
+        delete temp;
+      }
+      else{
+        
+       
+      }
+
+    }
+    if (key > subroot->data){
+      _delete_node(subroot->right, key);
+    }
+    if (key < subroot->data){
+      _delete_node(subroot->left, key);
+    }
+
+  }
+
   bool _search(Node *subroot, int key) {
     if (!subroot) return false; // Base case: key not found
     if (key == subroot->data) return true; // Key found
@@ -52,6 +86,7 @@ public:
   void insert(int x) { _insert(root, x); }
   bool search(int key) { return _search(root, key);}
   void print() { _print(root); }
+  void delete_node(int key) {}
 };
 
 int main() {
