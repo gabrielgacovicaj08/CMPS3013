@@ -17,6 +17,10 @@ class Bst {
   Node *root;
 
   Node* find_min(Node* subtroot, int key){
+    while(subtroot->left){
+      subtroot = subtroot->left;
+    }
+    return subtroot;
   }
 
   void _delete_node(Node *&subroot, int key){
@@ -36,9 +40,11 @@ class Bst {
         delete temp;
       }
       else{
-        
-       
-      }
+        Node* successor = find_min(subroot, key);
+        subroot->data = successor->data;
+        _delete_node(successor->right, successor->data );
+
+       }
 
     }
     if (key > subroot->data){
