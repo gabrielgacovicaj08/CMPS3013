@@ -16,44 +16,49 @@ struct Node {
 class Bst {
   Node *root;
 
-  Node* find_min(Node* subtroot, int key){
-    while(subtroot->left){
-      subtroot = subtroot->left;
+  // Function to find the minimum node in the right subtree
+  Node* find_min(Node* subroot){
+    while (subroot->left) {
+      subroot = subroot->left;
     }
-    return subtroot;
+    return subroot;
   }
 
   void _delete_node(Node *&subroot, int key){
-    if(!subroot){return;}
-    if(key == subroot->data){
-      if (subroot->right == nullptr && subroot->left == nullptr){
+    if (!subroot) return; // Base case: node not found
+
+    // Find the node to delete
+    if (key == subroot->data) {
+      // Case 1: No children (leaf node)
+      if (!subroot->left && !subroot->right) {
         delete subroot;
+        subroot = nullptr;
       }
-      if(!subroot->left){
+      // Case 2: Only right child
+      else if (!subroot->left) {
         Node* temp = subroot;
         subroot = subroot->right;
         delete temp;
       }
-      if(!subroot->right){
+      // Case 3: Only left child
+      else if (!subroot->right) {
         Node* temp = subroot;
         subroot = subroot->left;
         delete temp;
       }
-      else{
-        Node* successor = find_min(subroot, key);
-        subroot->data = successor->data;
-        _delete_node(successor->right, successor->data );
-
-       }
-
+      // Case 4: Two children
+      else {
+        Node* successor = find_min(subroot->right); // Find the in-order successor
+        subroot->data = successor->data; // Replace data with the successor's data
+        _delete_node(subroot->right, successor->data); // Delete the successor
+      }
     }
-    if (key > subroot->data){
+    // Search for the node recursively
+    else if (key < subroot->data) {
+      _delete_node(subroot->left, key);
+    } else {
       _delete_node(subroot->right, key);
     }
-    if (key < subroot->data){
-      _delete_node(subroot->left, key);
-    }
-
   }
 
   bool _search(Node *subroot, int key) {
@@ -62,7 +67,7 @@ class Bst {
     if (key < subroot->data) 
       return _search(subroot->left, key); // Search left subtree
     return _search(subroot->right, key); // Search right subtree
-    }
+  }
 
   void _print(Node *subroot) {
     if (!subroot) {
@@ -86,13 +91,12 @@ class Bst {
     }
   }
 
-
 public:
   Bst() { root = nullptr; }
   void insert(int x) { _insert(root, x); }
-  bool search(int key) { return _search(root, key);}
+  bool search(int key) { return _search(root, key); }
   void print() { _print(root); }
-  void delete_node(int key) {}
+  void delete_node(int key) { _delete_node(root, key); } // Added semicolon
 };
 
 int main() {
@@ -102,13 +106,23 @@ int main() {
   tree.insert(5);
   tree.insert(7);
   tree.insert(17);
-  tree.print();
+  
+  cout << "BST contents: ";
+  tree.print(); // Print the tree
+  cout << endl;
 
+  // Search for a key
   int key = 7;
   if (tree.search(key))
     cout << "Found " << key << " in BST." << endl;
   else
     cout << key << " not found in BST." << endl;
+
+  // Delete a node
+  tree.delete_node(7);
+  cout << "After deleting 7: ";
+  tree.print(); // Print the tree again after deletion
+  cout << endl;
 
   return 0;
 }
